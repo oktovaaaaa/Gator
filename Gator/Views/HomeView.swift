@@ -37,31 +37,22 @@ struct HomeView: View {
                         HeaderView()
                         WelcomeCardView(nama: userName)
                         
+                        // Picker Section
                         VStack(spacing: 0) {
                             HStack(spacing: 16) {
-                                Image(systemName: "building.columns.fill")
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                                Text("PROGRAM STUDI")
-                                    .font(.caption)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.gray)
+                                Image(systemName: "building.columns.fill").font(.headline).foregroundColor(.gray)
+                                Text("PROGRAM STUDI").font(.caption).fontWeight(.semibold).foregroundColor(.gray)
                                 Spacer()
-                                
                                 Menu {
                                     ForEach(allJurusans) { jurusan in
-                                        Button(jurusan.nama) {
-                                            selectedMajorName = jurusan.nama
-                                        }
+                                        Button(jurusan.nama) { selectedMajorName = jurusan.nama }
                                     }
                                 } label: {
                                     HStack {
                                         Text(selectedMajorName ?? "Pilih Jurusan")
                                         Image(systemName: "chevron.down")
                                     }
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.primary)
+                                    .font(.subheadline).fontWeight(.semibold).foregroundColor(.primary)
                                 }
                             }
                             .padding()
@@ -69,15 +60,9 @@ struct HomeView: View {
                             Divider().padding(.leading, 40)
 
                             HStack(spacing: 16) {
-                                Image(systemName: "graduationcap.fill")
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                                Text("SEMESTER")
-                                    .font(.caption)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.gray)
+                                Image(systemName: "graduationcap.fill").font(.headline).foregroundColor(.gray)
+                                Text("SEMESTER").font(.caption).fontWeight(.semibold).foregroundColor(.gray)
                                 Spacer()
-                                
                                 Menu {
                                     if let selectedMajor = selectedMajor {
                                         ForEach(selectedMajor.semesters.sorted(by: { $0.nomor < $1.nomor })) { semester in
@@ -93,16 +78,15 @@ struct HomeView: View {
                                         Text("Semester \(selectedSemesterNumber ?? 1)")
                                         Image(systemName: "chevron.down")
                                     }
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.primary)
+                                    .font(.subheadline).fontWeight(.semibold).foregroundColor(.primary)
                                 }
                             }
                             .padding()
                         }
-                        .background(Color("WhiteDark"))
+                        .background(Color(.secondarySystemGroupedBackground)) // Warna netral yang adaptif
                         .cornerRadius(12)
                         
+                        // Courses Grid Section
                         if !coursesToDisplay.isEmpty {
                             LazyVGrid(columns: gridLayout, spacing: 16) {
                                 ForEach(coursesToDisplay) { matkul in
@@ -126,20 +110,28 @@ struct HomeView: View {
                 .onAppear(perform: setupDefaults)
             }
             .disabled(courseForPopup != nil)
-            .tint(.green)
 
+            // --- BAGIAN POP-UP ---
             if courseForPopup != nil {
                 Color.black.opacity(0.4).ignoresSafeArea().onTapGesture { courseForPopup = nil }
-                CourseDetailPopupView(courseForPopup: $courseForPopup) { selectedCourse in
+                
+                CourseDetailPopupView(courseForPopup: $courseForPopup) { courseToNavigate in
+                    // === PERBAIKAN LOGIKA NAVIGASI DI SINI ===
+                    // 1. Simpan dulu tujuan navigasi
+                    let targetCourse = courseToNavigate
+                    // 2. Tutup pop-up
                     courseForPopup = nil
-                    navigationPath.append(selectedCourse)
+                    // 3. Reset total path navigasi untuk memulai dari awal
+                    navigationPath = NavigationPath()
+                    // 4. Tambahkan tujuan baru ke path yang sudah bersih
+                    navigationPath.append(targetCourse)
                 }
                 .transition(.scale.combined(with: .opacity))
             }
         }
         .animation(.easeInOut, value: courseForPopup)
         .onChange(of: selectedMajorName) {
-
+            // Saat jurusan diganti, otomatis pilih semester pertama yang tersedia
             selectedSemesterNumber = selectedMajor?.semesters.sorted(by: { $0.nomor < $1.nomor }).first?.nomor
         }
     }

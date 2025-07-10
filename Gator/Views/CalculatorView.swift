@@ -7,7 +7,7 @@ struct KalkulatorNilaiView: View {
 
     @State private var selectedGrade: String = "Pilih Grade"
     @State private var skorMinimumDiperlukan: [PersistentIdentifier: String] = [:]
-    @State private var summaryText: String = "Silakan pilih target grade untuk memulai kalkulasi."
+    @State private var finalGradeResult: String? = nil
     @State private var isInfoSheetPresented = false
 
     static let gradeThresholds: [String: Double] = ["A": 79.5, "AB": 72, "B": 64.5, "BC": 57, "C": 49.5, "D": 34, "E": 0]
@@ -27,32 +27,26 @@ struct KalkulatorNilaiView: View {
                     Text("Predict Grade").fontWeight(.medium)
                     Spacer()
                     Picker("Grade", selection: $selectedGrade) {
-                        ForEach(Self.gradeOptions, id: \.self) { grade in
-                            Text(grade)
-                        }
+                        ForEach(Self.gradeOptions, id: \.self) { Text($0) }
                     }
                     .pickerStyle(.menu)
                 }
                 .padding(.bottom, 10)
 
-                ForEach(sortedKomponen, id: \.nama) { komponen in
+                ForEach(sortedKomponen, id: \.id) { komponen in
                     KalkulatorInputRow(
                         namaKomponen: komponen.nama,
                         persentase: komponen.bobot,
                         nilaiAktual: bindingFor(komponen),
-                        skorMinimumTampil: skorMinimumDiperlukan[mataKuliah.persistentModelID] ?? "-"
+                        skorMinimumTampil: skorMinimumDiperlukan[komponen.id] ?? "-"
                     )
                     Divider()
                 }
-
-                if !summaryText.isEmpty {
-                    Text(summaryText)
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, 20)
-                }
+                
+                summaryResultView
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 20)
             }
             .padding()
         }
@@ -60,16 +54,12 @@ struct KalkulatorNilaiView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    isInfoSheetPresented = true
-                }) {
+                Button(action: { isInfoSheetPresented = true }) {
                     Image(systemName: "info.circle")
                 }
             }
         }
-        .sheet(isPresented: $isInfoSheetPresented) {
-            InfoPopupView()
-        }
+        .sheet(isPresented: $isInfoSheetPresented) { InfoPopupView() }
         .onChange(of: selectedGrade) { _ in calculateMinimumScores() }
         .onAppear { calculateMinimumScores() }
         .onDisappear { try? modelContext.save() }
@@ -79,34 +69,28 @@ struct KalkulatorNilaiView: View {
         Binding<String>(
             get: {
                 if let nilai = komponen.nilaiAktual {
-                    return floor(nilai) == nilai ?
-                        String(format: "%.0f", nilai) :
-                        String(format: "%.1f", nilai)
+                    return floor(nilai) == nilai ? String(format: "%.0f", nilai) : String(format: "%.1f", nilai)
                 }
                 return ""
             },
             set: { newValue in
                 let sanitized = newValue.replacingOccurrences(of: ",", with: ".")
-                if sanitized.isEmpty {
-                    komponen.nilaiAktual = nil
-                } else if let doubleValue = Double(sanitized) {
-                    komponen.nilaiAktual = doubleValue
-                }
+                if sanitized.isEmpty { komponen.nilaiAktual = nil }
+                else if let doubleValue = Double(sanitized) { komponen.nilaiAktual = doubleValue }
                 calculateMinimumScores()
             }
         )
     }
 
     private func calculateMinimumScores() {
-        guard selectedGrade != "Pilih Grade",
-              let targetTotalScore = Self.gradeThresholds[selectedGrade] else {
-            resetCalculations()
-            return
+        finalGradeResult = nil
+        
+        guard selectedGrade != "Pilih Grade", let targetTotalScore = Self.gradeThresholds[selectedGrade] else {
+            resetCalculations(); return
         }
 
         var nilaiTertimbang: Double = 0
         var totalBobotTerisi: Double = 0
-
         for komponen in sortedKomponen {
             if let nilai = komponen.nilaiAktual {
                 nilaiTertimbang += (nilai * komponen.bobot) / 100.0
@@ -121,13 +105,9 @@ struct KalkulatorNilaiView: View {
             let nilaiAkhir = nilaiTertimbang
             var grade = "E"
             for (g, threshold) in Self.gradeThresholds.sorted(by: { $0.value > $1.value }) {
-                if nilaiAkhir >= threshold {
-                    grade = g
-                    break
-                }
+                if nilaiAkhir >= threshold { grade = g; break }
             }
-            let nilaiFormatted = String(format: "%.2f", nilaiAkhir)
-            summaryText = "Nilai akhir kamu adalah \(nilaiFormatted) dengan grade \(grade)."
+            finalGradeResult = "Nilai akhir kamu adalah \(String(format: "%.2f", nilaiAkhir)) dengan grade \(grade)."
             resetSkorMinimumDisplay()
             return
         }
@@ -135,6 +115,7 @@ struct KalkulatorNilaiView: View {
         let sisaNilai = targetTotalScore - nilaiTertimbang
         let skorMinimum = (sisaNilai / bobotKosong) * 100.0
 
+        // --- PERBAIKAN 1: Kembalikan ke nama ikon SF Symbols ---
         let displayValue: String
         if sisaNilai <= 0 {
             displayValue = "checkmark.circle.fill"
@@ -144,20 +125,75 @@ struct KalkulatorNilaiView: View {
             displayValue = String(format: "%.1f", skorMinimum)
         }
 
-        skorMinimumDiperlukan = [mataKuliah.persistentModelID: displayValue]
-        summaryText = "Untuk mencapai grade \(selectedGrade), kamu butuh nilai rata-rata \(displayValue) pada komponen sisa."
+        var temp = [KomponenNilai.ID: String]()
+        for komponen in sortedKomponen {
+            temp[komponen.id] = komponen.nilaiAktual == nil ? displayValue : "-"
+        }
+        skorMinimumDiperlukan = temp
     }
 
     private func resetCalculations() {
-        summaryText = "Silakan pilih target grade untuk memulai kalkulasi."
+        finalGradeResult = nil
         resetSkorMinimumDisplay()
     }
 
     private func resetSkorMinimumDisplay() {
-        skorMinimumDiperlukan = [mataKuliah.persistentModelID: "-"]
+        var temp = [KomponenNilai.ID: String]()
+        for komponen in sortedKomponen {
+            temp[komponen.id] = "-"
+        }
+        skorMinimumDiperlukan = temp
+    }
+    
+    @ViewBuilder
+    private var summaryResultView: some View {
+        if let finalText = finalGradeResult {
+            Text(finalText)
+                .font(.headline)
+                .fontWeight(.bold)
+        } else {
+            let displayValue = skorMinimumDiperlukan.first(where: { $0.value != "-" })?.value ?? ""
+            
+            if selectedGrade == "Pilih Grade" || displayValue.isEmpty || displayValue == "-" {
+                Text("Silakan pilih target grade untuk memulai kalkulasi.")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+            
+            // --- PERBAIKAN 2: Sesuaikan pengecekan dengan nama ikon ---
+            } else if displayValue == "xmark.circle.fill" {
+                (Text("Tidak memungkinkan untuk meraih grade ")
+                    .fontWeight(.bold)
+                 + Text(selectedGrade)
+                    .fontWeight(.bold)
+                    .foregroundColor(.red))
+                    .font(.headline)
+            } else if displayValue == "checkmark.circle.fill" {
+                (Text("Selamat! Target grade ")
+                    .fontWeight(.bold)
+                 + Text(selectedGrade)
+                    .fontWeight(.bold)
+                    .foregroundColor(.green)
+                 + Text(" sudah pasti tercapai.")
+                    .fontWeight(.bold))
+                    .font(.headline)
+            } else {
+                (Text("Untuk mencapai grade ")
+                    .fontWeight(.bold)
+                 + Text(selectedGrade)
+                    .fontWeight(.bold)
+                    .foregroundColor(.green)
+                 + Text(", Anda butuh nilai rata-rata ")
+                    .fontWeight(.bold)
+                 + Text(displayValue)
+                    .fontWeight(.bold)
+                    .foregroundColor(.green)
+                 + Text(" pada komponen sisa."))
+                    .font(.headline)
+            }
+        }
     }
 }
-
 private struct InfoPopupView: View {
     @Environment(\.dismiss) var dismiss
 
