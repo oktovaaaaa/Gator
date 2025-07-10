@@ -33,11 +33,25 @@ struct KalkulatorInputRow: View {
                     .background(Color(UIColor.systemGray6))
                     .cornerRadius(8)
                 Spacer()
-                Text(skorMinimumTampil)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(skorMinimumTampil == "❗️" ? .red : (skorMinimumTampil == "✅" ? .green : .primary))
-                    .frame(width: 80, alignment: .trailing)
+                
+                // Tampilkan icon atau angka berdasarkan nilai skorMinimumTampil
+                if skorMinimumTampil == "checkmark.circle.fill" {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.green)
+                        .frame(width: 80, alignment: .trailing)
+                } else if skorMinimumTampil == "xmark.circle.fill" {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.red)
+                        .frame(width: 80, alignment: .trailing)
+                } else {
+                    Text(skorMinimumTampil)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                        .frame(width: 80, alignment: .trailing)
+                }
             }
         }
         .padding(.vertical, 10)

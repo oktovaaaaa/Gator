@@ -144,9 +144,9 @@ struct KalkulatorNilaiView: View {
 
             let displayValue: String
             if sisaNilai <= 0 {
-                displayValue = "✅"
+                displayValue = "checkmark.circle.fill"
             } else if skorMinimum > 100 || skorMinimum.isNaN {
-                displayValue = "❗️"
+                displayValue = "xmark.circle.fill"
             } else {
                 displayValue = String(format: "%.1f", skorMinimum)
             }
