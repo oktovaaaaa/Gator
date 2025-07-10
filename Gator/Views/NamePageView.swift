@@ -28,7 +28,7 @@ struct WelcomeStepView: View {
             VStack(alignment: .leading, spacing: 20) {
                 FeatureRow(iconName: "apps.iphone.badge.plus", title: "Kurikulum Terintegrasi", subtitle: "Lihat semua mata kuliah yang telah disiapkan untuk setiap jurusan dan semester.")
                 FeatureRow(iconName: "slider.horizontal.3", title: "Kelola Komponen Nilai", subtitle: "Sesuaikan bobot tugas, kuis, UTS, dan UAS untuk setiap mata kuliah.")
-                FeatureRow(iconName: "chart.bar.xaxis", title: "Prediksi Nilai Minimum", subtitle: "Hitung nilai minimum yang Anda butuhkan untuk mencapai target grade impian Anda.")
+                FeatureRow(iconName: "chart.bar.xaxis", title: "Mencari Nilai Minimum", subtitle: "Hitung nilai minimum yang Anda butuhkan untuk mencapai target grade impian Anda.")
             }
 
             Spacer()
@@ -48,6 +48,7 @@ struct WelcomeStepView: View {
         .background(Color("WhiteDark"))
     }
 }
+
 struct NameStepView: View {
     @AppStorage("userName") private var userName: String = ""
     @State private var inputName: String = ""
@@ -98,21 +99,23 @@ struct NameStepView: View {
 
                 Spacer()
 
-                Button("Simpan & Lanjutkan") {
+                // ✅ Ganti Button agar bisa full tap area
+                Button(action: {
                     hasAttemptedToContinue = true
                     if !inputName.trimmingCharacters(in: .whitespaces).isEmpty {
                         userName = inputName
-                        isActive = true // Trigger navigation
+                        isActive = true
                     }
+                }) {
+                    Text("Simpan & Lanjutkan")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color("GreenGator"))
+                        .cornerRadius(12)
                 }
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color("GreenGator"))
-                .cornerRadius(12)
 
-                // ⬇️ Navigation ke HomeView (transisi kiri ala Apple)
                 NavigationLink(destination: HomeView(userName: inputName), isActive: $isActive) {
                     EmptyView()
                 }

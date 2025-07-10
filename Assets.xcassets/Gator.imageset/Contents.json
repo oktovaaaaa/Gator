@@ -1,7 +1,18 @@
 {
   "images" : [
     {
-      "filename" : "logo_itam-removebg-preview.png",
+      "filename" : "Blue_Minimalist_Watercolor_Logo-4-removebg-preview.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Blue_Minimalist_Watercolor_Logo-3-removebg-preview.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -10,6 +21,26 @@
       "scale" : "2x"
     },
     {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "idiom" : "universal",
       "scale" : "3x"
     }
