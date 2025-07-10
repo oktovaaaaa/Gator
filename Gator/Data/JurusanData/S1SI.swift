@@ -170,7 +170,7 @@ enum S1SI_Data {
         
         let matkul3F = MataKuliah(nama: "Bahasa Inggris II", sks: 2, semester: semester3)
         matkul3F.komponen = [
-            KomponenNilai(nama: "Tugas", bobot: 20, mataKuliah: matkul3F),
+            KomponenNilai(nama: "Tugas", bobot: 10, mataKuliah: matkul3F),
             KomponenNilai(nama: "Quis", bobot: 15, mataKuliah: matkul3F),
             KomponenNilai(nama: "UTS", bobot: 30, mataKuliah: matkul3F),
             KomponenNilai(nama: "UAS", bobot: 30, mataKuliah: matkul3F),

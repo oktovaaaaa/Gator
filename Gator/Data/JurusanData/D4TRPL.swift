@@ -20,8 +20,8 @@ enum D4TRPL_Data {
         let matkul1A = MataKuliah(nama: "Dasar Pemrograman", sks: 3, semester: semester1)
         matkul1A.komponen = [KomponenNilai(nama: "Tugas", bobot: 15, mataKuliah: matkul1A),
                              KomponenNilai(nama: "Quiz", bobot: 25, mataKuliah: matkul1A),
-                             KomponenNilai(nama: "UTS", bobot: 25, mataKuliah: matkul1A),
-                             KomponenNilai(nama: "UAS", bobot: 25, mataKuliah: matkul1A),
+                             KomponenNilai(nama: "UTS", bobot: 20, mataKuliah: matkul1A),
+                             KomponenNilai(nama: "UAS", bobot: 20, mataKuliah: matkul1A),
                              KomponenNilai(nama: "Proyek", bobot: 20, mataKuliah: matkul1A),
                             ]
         
@@ -243,7 +243,7 @@ enum D4TRPL_Data {
         let matkul4G = MataKuliah(nama: "Technopreneurship", sks: 3, semester: semester4) // Updated name and SKS
         matkul4G.komponen = [KomponenNilai(nama: "Tugas", bobot: 27, mataKuliah: matkul4G),
                              KomponenNilai(nama: "UTS", bobot: 35, mataKuliah: matkul4G),
-                             KomponenNilai(nama: "UAS", bobot: 37, mataKuliah: matkul4G),
+                             KomponenNilai(nama: "UAS", bobot: 38, mataKuliah: matkul4G),
                             ]
         
         semester4.mataKuliah = [matkul4A, matkul4B, matkul4C, matkul4D, matkul4E, matkul4F, matkul4G]

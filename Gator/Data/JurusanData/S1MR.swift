@@ -9,10 +9,10 @@ enum S1MR_Data {
         // Semester 1
         let semester1 = Semester(nomor: 1, jurusan: jurusan)
         let matkul1A = MataKuliah(nama: "Matematika Dasar I", sks: 4, semester: semester1)
-        matkul1A.komponen = [KomponenNilai(nama: "Tugas", bobot: 15, mataKuliah: matkul1A), KomponenNilai(nama: "Quis", bobot: 25, mataKuliah: matkul1A), KomponenNilai(nama: "UTS", bobot: 25, mataKuliah: matkul1A), KomponenNilai(nama: "UAS", bobot: 25, mataKuliah: matkul1A), KomponenNilai(nama: "UTS", bobot: 25, mataKuliah: matkul1A), KomponenNilai(nama: "Tugas Proyek", bobot: 10, mataKuliah: matkul1A)]
+        matkul1A.komponen = [KomponenNilai(nama: "Tugas", bobot: 15, mataKuliah: matkul1A), KomponenNilai(nama: "Quis", bobot: 25, mataKuliah: matkul1A), KomponenNilai(nama: "UTS", bobot: 25, mataKuliah: matkul1A), KomponenNilai(nama: "UAS", bobot: 25, mataKuliah: matkul1A),  KomponenNilai(nama: "Tugas Proyek", bobot: 10, mataKuliah: matkul1A)]
         
         let matkul1B = MataKuliah(nama: "Fisika Dasar IB", sks: 3, semester: semester1)
-        matkul1B.komponen = [KomponenNilai(nama: "Praktikum", bobot: 10, mataKuliah: matkul1B), KomponenNilai(nama: "Tugas", bobot: 10, mataKuliah: matkul1B), KomponenNilai(nama: "Quis", bobot: 15, mataKuliah: matkul1B), KomponenNilai(nama: "UTS", bobot: 25, mataKuliah: matkul1B),KomponenNilai(nama: "UAS", bobot: 25, mataKuliah: matkul1B), KomponenNilai(nama: "UTS", bobot: 25, mataKuliah: matkul1B),KomponenNilai(nama: "RBL", bobot: 15, mataKuliah: matkul1B)]
+        matkul1B.komponen = [KomponenNilai(nama: "Praktikum", bobot: 10, mataKuliah: matkul1B), KomponenNilai(nama: "Tugas", bobot: 10, mataKuliah: matkul1B), KomponenNilai(nama: "Quis", bobot: 15, mataKuliah: matkul1B), KomponenNilai(nama: "UTS", bobot: 25, mataKuliah: matkul1B),KomponenNilai(nama: "UAS", bobot: 25, mataKuliah: matkul1B), KomponenNilai(nama: "RBL", bobot: 15, mataKuliah: matkul1B)]
         
         let matkul1C = MataKuliah(nama: "Bahasa Inggris I", sks: 2, semester: semester1)
         matkul1C.komponen = [KomponenNilai(nama: "Tugas", bobot: 20, mataKuliah: matkul1C), KomponenNilai(nama: "Quis", bobot: 15, mataKuliah: matkul1C), KomponenNilai(nama: "UTS", bobot: 20, mataKuliah: matkul1C), KomponenNilai(nama: "UAS", bobot: 30, mataKuliah: matkul1C),KomponenNilai(nama: "Tambahan 1", bobot: 15, mataKuliah: matkul1C)]
@@ -46,7 +46,7 @@ enum S1MR_Data {
         matkul2D.komponen = [KomponenNilai(nama: "Praktikum", bobot: 15, mataKuliah: matkul2D), KomponenNilai(nama: "Tugas", bobot: 15, mataKuliah: matkul2D), KomponenNilai(nama: "UTS", bobot: 35, mataKuliah: matkul2D), KomponenNilai(nama: "UAS", bobot: 35, mataKuliah: matkul2D)]
         
         let matkul2E = MataKuliah(nama: "Visualisasi dan Gambar Teknik", sks: 3, semester: semester2)
-        matkul2E.komponen = [KomponenNilai(nama: "30", bobot: 30, mataKuliah: matkul2E), KomponenNilai(nama: "UTS", bobot: 30, mataKuliah: matkul2E), KomponenNilai(nama: "UAS", bobot: 240, mataKuliah: matkul2E)]
+        matkul2E.komponen = [KomponenNilai(nama: "30", bobot: 30, mataKuliah: matkul2E), KomponenNilai(nama: "UTS", bobot: 30, mataKuliah: matkul2E), KomponenNilai(nama: "UAS", bobot: 40, mataKuliah: matkul2E)]
         
         let matkul2F = MataKuliah(nama: "Bahasa Inggris II", sks: 2, semester: semester2)
         matkul2F.komponen = [KomponenNilai(nama: "Tugas", bobot: 20, mataKuliah: matkul2F), KomponenNilai(nama: "Quis", bobot: 15, mataKuliah: matkul2F), KomponenNilai(nama: "UTS", bobot: 20, mataKuliah: matkul2F), KomponenNilai(nama: "UAS", bobot: 30, mataKuliah: matkul2F), KomponenNilai(nama: "Tambahan 1", bobot: 15, mataKuliah: matkul2F)]

@@ -275,9 +275,9 @@ enum D3TI_Data {
                             ]
         
         let matkul6C = MataKuliah(nama: "Keteknowiraan", sks: 2, semester: semester4)
-        matkul6C.komponen = [KomponenNilai(nama: "Tugas", bobot: 27, mataKuliah: matkul6C),
-                              KomponenNilai(nama: "UTS", bobot: 35.5, mataKuliah: matkul6C),
-                              KomponenNilai(nama: "UAS", bobot: 37.5, mataKuliah: matkul6C),
+        matkul6C.komponen = [KomponenNilai(nama: "Tugas", bobot: 27, mataKuliah: matkul6B),
+                              KomponenNilai(nama: "UTS", bobot: 35.5, mataKuliah: matkul6B),
+                              KomponenNilai(nama: "UAS", bobot: 37.5, mataKuliah: matkul6B),
                             ]
         
         let matkul6D = MataKuliah(nama: "Kecerdasan Buatan", sks: 3, semester: semester6)

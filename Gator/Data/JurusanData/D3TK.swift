@@ -107,7 +107,7 @@ enum D3TK_Data {
                              KomponenNilai(nama: "Quis", bobot: 15, mataKuliah: matkul2H),
                              KomponenNilai(nama: "UTS", bobot: 25, mataKuliah: matkul2H),
                              KomponenNilai(nama: "UAS", bobot: 25, mataKuliah: matkul2H)]
-        let matkul2I = MataKuliah(nama: "First Year Project", sks: 3, semester: semester2)
+        let matkul2I = MataKuliah(nama: "First Year Project II", sks: 3, semester: semester2)
         matkul2I.komponen = [KomponenNilai(nama: "Seminar", bobot: 45, mataKuliah: matkul2I),
                              KomponenNilai(nama: "Bimbingan", bobot: 40, mataKuliah: matkul2I),
                              KomponenNilai(nama: "Administrasi", bobot: 10, mataKuliah: matkul2I),
