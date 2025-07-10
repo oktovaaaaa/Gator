@@ -221,7 +221,7 @@ enum D3TI_Data {
         
         let matkul4E = MataKuliah(nama: "Aplikasi Terdistribusi & Layanan Virtual", sks: 3, semester: semester4)
         matkul4E.komponen = [KomponenNilai(nama: "Quiz", bobot: 10, mataKuliah: matkul4E),
-                             KomponenNilai(nama: "Tugas", bobot: 10, mataKuliah: matkul4D),
+                             KomponenNilai(nama: "Tugas", bobot: 10, mataKuliah: matkul4E),
                              KomponenNilai(nama: "UTS", bobot: 35, mataKuliah: matkul4E),
                              KomponenNilai(nama: "UAS", bobot: 35, mataKuliah: matkul4E),
                              KomponenNilai(nama: "Praktikum", bobot: 10, mataKuliah: matkul4E),
@@ -232,7 +232,7 @@ enum D3TI_Data {
                              KomponenNilai(nama: "Quiz", bobot: 10, mataKuliah: matkul4F),
                              KomponenNilai(nama: "UTS", bobot: 30, mataKuliah: matkul4F),
                              KomponenNilai(nama: "UAS", bobot: 35, mataKuliah: matkul4F),
-                             KomponenNilai(nama: "Proyek", bobot: 15, mataKuliah: matkul4D),
+                             KomponenNilai(nama: "Proyek", bobot: 15, mataKuliah: matkul4F),
                             ]
         
         let matkul4G = MataKuliah(nama: "Sistem Komputasi Awan", sks: 2, semester: semester4)
@@ -275,9 +275,9 @@ enum D3TI_Data {
                             ]
         
         let matkul6C = MataKuliah(nama: "Keteknowiraan", sks: 2, semester: semester4)
-        matkul6C.komponen = [KomponenNilai(nama: "Tugas", bobot: 27, mataKuliah: matkul6B),
-                              KomponenNilai(nama: "UTS", bobot: 35.5, mataKuliah: matkul6B),
-                              KomponenNilai(nama: "UAS", bobot: 37.5, mataKuliah: matkul6B),
+        matkul6C.komponen = [KomponenNilai(nama: "Tugas", bobot: 27, mataKuliah: matkul6C),
+                              KomponenNilai(nama: "UTS", bobot: 35.5, mataKuliah: matkul6C),
+                              KomponenNilai(nama: "UAS", bobot: 37.5, mataKuliah: matkul6C),
                             ]
         
         let matkul6D = MataKuliah(nama: "Kecerdasan Buatan", sks: 3, semester: semester6)
@@ -290,7 +290,7 @@ enum D3TI_Data {
         
         let matkul6E = MataKuliah(nama: "Tata Kelola Teknologi Informasi", sks: 3, semester: semester6)
         matkul6E.komponen = [KomponenNilai(nama: "Quiz", bobot: 15, mataKuliah: matkul6E),
-                             KomponenNilai(nama: "Tugas", bobot: 25, mataKuliah: matkul6D),
+                             KomponenNilai(nama: "Tugas", bobot: 25, mataKuliah: matkul6E),
                              KomponenNilai(nama: "UTS", bobot: 20, mataKuliah: matkul6E),
                              KomponenNilai(nama: "UAS", bobot: 20, mataKuliah: matkul6E),
                              KomponenNilai(nama: "Praktikum", bobot: 20, mataKuliah: matkul6E),
@@ -301,7 +301,7 @@ enum D3TI_Data {
                              KomponenNilai(nama: "Quiz", bobot: 10, mataKuliah: matkul6F),
                              KomponenNilai(nama: "Adm", bobot: 10, mataKuliah: matkul6F),
                              KomponenNilai(nama: "UAS", bobot: 30, mataKuliah: matkul6F),
-                             KomponenNilai(nama: "Sertifikasi", bobot: 45, mataKuliah: matkul6D),
+                             KomponenNilai(nama: "Sertifikasi", bobot: 45, mataKuliah: matkul6F),
                             ]
         
         let matkul6G = MataKuliah(nama: "Tugas Akhir", sks: 6, semester: semester6)

@@ -2,29 +2,27 @@ import SwiftUI
 import SwiftData
 
 struct KalkulatorNilaiView: View {
-    // ... (properti @Environment dan @Bindable Anda tetap sama) ...
     @Environment(\.modelContext) private var modelContext
     @Bindable var mataKuliah: MataKuliah
-    
-    // State yang sudah ada
+
     @State private var selectedGrade: String = "Pilih Grade"
     @State private var skorMinimumDiperlukan: [String: String] = [:]
     @State private var summaryText: String = "Silakan pilih target grade untuk memulai kalkulasi."
-    
-    // 1. TAMBAHKAN STATE BARU UNTUK POP-UP
     @State private var isInfoSheetPresented = false
 
-    // Properti lainnya tetap sama
     static let gradeThresholds: [String: Double] = ["A": 79.5, "AB": 72, "B": 64.5, "BC": 57, "C": 49.5, "D": 34, "E": 0]
     static let gradeOptions = ["Pilih Grade", "A", "AB", "B", "BC", "C", "D", "E"]
-    private var sortedKomponen: [KomponenNilai] { mataKuliah.komponen.sorted { $0.nama < $1.nama } }
+
+    private var sortedKomponen: [KomponenNilai] {
+        mataKuliah.komponen.sorted { $0.nama < $1.nama }
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 15) {
                 Text(mataKuliah.nama)
                     .font(.largeTitle).fontWeight(.bold)
-                
+
                 HStack {
                     Text("Predict Grade").fontWeight(.medium)
                     Spacer()
@@ -36,17 +34,17 @@ struct KalkulatorNilaiView: View {
                     .pickerStyle(.menu)
                 }
                 .padding(.bottom, 10)
-                
+
                 ForEach(sortedKomponen) { komponen in
                     KalkulatorInputRow(
                         namaKomponen: komponen.nama,
                         persentase: komponen.bobot,
                         nilaiAktual: bindingFor(komponen),
-                        skorMinimumTampil: skorMinimumDiperlukan[komponen.nama] ?? "-"
+                        skorMinimumTampil: skorMinimumDiperlukan[komponen.id.uuidString] ?? "-"
                     )
                     Divider()
                 }
-                
+
                 if !summaryText.isEmpty {
                     Text(summaryText)
                         .font(.footnote)
@@ -60,119 +58,112 @@ struct KalkulatorNilaiView: View {
         }
         .navigationTitle("Kalkulasi Nilai")
         .navigationBarTitleDisplayMode(.inline)
-        
-        // 2. TAMBAHKAN TOOLBAR UNTUK TOMBOL INFO
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    isInfoSheetPresented = true // Tampilkan sheet saat tombol ditekan
+                    isInfoSheetPresented = true
                 }) {
                     Image(systemName: "info.circle")
                 }
             }
         }
-        // 3. TAMBAHKAN MODIFIER .sheet
         .sheet(isPresented: $isInfoSheetPresented) {
-            InfoPopupView() // Tampilkan InfoPopupView di sini
+            InfoPopupView()
         }
-        
         .onChange(of: selectedGrade) { _ in calculateMinimumScores() }
         .onAppear { calculateMinimumScores() }
         .onDisappear { try? modelContext.save() }
     }
 
-    // ... (semua fungsi private Anda tidak berubah) ...
     private func bindingFor(_ komponen: KomponenNilai) -> Binding<String> {
-            Binding<String>(
-                get: {
-                    if let nilai = komponen.nilaiAktual {
-                        return floor(nilai) == nilai ?
-                            String(format: "%.0f", nilai) :
-                            String(format: "%.1f", nilai)
-                    }
-                    return ""
-                },
-                set: { newValue in
-                    let sanitized = newValue.replacingOccurrences(of: ",", with: ".")
-                    if sanitized.isEmpty {
-                        komponen.nilaiAktual = nil
-                    } else if let doubleValue = Double(sanitized) {
-                        komponen.nilaiAktual = doubleValue
-                    }
-                    calculateMinimumScores()
-                }
-            )
-        }
-
-        private func calculateMinimumScores() {
-            guard selectedGrade != "Pilih Grade",
-                  let targetTotalScore = Self.gradeThresholds[selectedGrade] else {
-                resetCalculations()
-                return
-            }
-
-            var nilaiTertimbang: Double = 0
-            var totalBobotTerisi: Double = 0
-            
-            for komponen in mataKuliah.komponen {
+        Binding<String>(
+            get: {
                 if let nilai = komponen.nilaiAktual {
-                    nilaiTertimbang += (nilai * komponen.bobot) / 100.0
-                    totalBobotTerisi += komponen.bobot
+                    return floor(nilai) == nilai ?
+                        String(format: "%.0f", nilai) :
+                        String(format: "%.1f", nilai)
                 }
-            }
-            
-            let totalBobot = mataKuliah.komponen.reduce(0.0) { $0 + $1.bobot }
-            let bobotKosong = totalBobot - totalBobotTerisi
-
-            if bobotKosong == 0 {
-                let nilaiAkhir = nilaiTertimbang
-                var grade = "E"
-                for (g, threshold) in Self.gradeThresholds.sorted(by: { $0.value > $1.value }) {
-                    if nilaiAkhir >= threshold {
-                        grade = g
-                        break
-                    }
+                return ""
+            },
+            set: { newValue in
+                let sanitized = newValue.replacingOccurrences(of: ",", with: ".")
+                if sanitized.isEmpty {
+                    komponen.nilaiAktual = nil
+                } else if let doubleValue = Double(sanitized) {
+                    komponen.nilaiAktual = doubleValue
                 }
-                let nilaiFormatted = String(format: "%.2f", nilaiAkhir)
-                summaryText = "Nilai akhir kamu adalah \(nilaiFormatted) dengan grade \(grade)."
-                resetSkorMinimumDisplay()
-                return
+                calculateMinimumScores()
             }
+        )
+    }
 
-            let sisaNilai = targetTotalScore - nilaiTertimbang
-            let skorMinimum = (sisaNilai / bobotKosong) * 100.0
-
-            let displayValue: String
-            if sisaNilai <= 0 {
-                displayValue = "checkmark.circle.fill"
-            } else if skorMinimum > 100 || skorMinimum.isNaN {
-                displayValue = "xmark.circle.fill"
-            } else {
-                displayValue = String(format: "%.1f", skorMinimum)
-            }
-
-            var temp = [String: String]()
-            for komponen in mataKuliah.komponen {
-                temp[komponen.nama] = komponen.nilaiAktual == nil ? displayValue : "-"
-            }
-            skorMinimumDiperlukan = temp
-            summaryText = "Untuk mencapai grade \(selectedGrade), kamu butuh nilai rata-rata \(displayValue) pada komponen sisa."
+    private func calculateMinimumScores() {
+        guard selectedGrade != "Pilih Grade",
+              let targetTotalScore = Self.gradeThresholds[selectedGrade] else {
+            resetCalculations()
+            return
         }
 
-        private func resetCalculations() {
-            summaryText = "Silakan pilih target grade untuk memulai kalkulasi."
+        var nilaiTertimbang: Double = 0
+        var totalBobotTerisi: Double = 0
+
+        for komponen in sortedKomponen {
+            if let nilai = komponen.nilaiAktual {
+                nilaiTertimbang += (nilai * komponen.bobot) / 100.0
+                totalBobotTerisi += komponen.bobot
+            }
+        }
+
+        let totalBobot = sortedKomponen.reduce(0.0) { $0 + $1.bobot }
+        let bobotKosong = totalBobot - totalBobotTerisi
+
+        if bobotKosong == 0 {
+            let nilaiAkhir = nilaiTertimbang
+            var grade = "E"
+            for (g, threshold) in Self.gradeThresholds.sorted(by: { $0.value > $1.value }) {
+                if nilaiAkhir >= threshold {
+                    grade = g
+                    break
+                }
+            }
+            let nilaiFormatted = String(format: "%.2f", nilaiAkhir)
+            summaryText = "Nilai akhir kamu adalah \(nilaiFormatted) dengan grade \(grade)."
             resetSkorMinimumDisplay()
+            return
         }
 
-        private func resetSkorMinimumDisplay() {
-            skorMinimumDiperlukan = Dictionary(uniqueKeysWithValues:
-                mataKuliah.komponen.map { ($0.nama, "-") }
-            )
+        let sisaNilai = targetTotalScore - nilaiTertimbang
+        let skorMinimum = (sisaNilai / bobotKosong) * 100.0
+
+        let displayValue: String
+        if sisaNilai <= 0 {
+            displayValue = "checkmark.circle.fill"
+        } else if skorMinimum > 100 || skorMinimum.isNaN {
+            displayValue = "xmark.circle.fill"
+        } else {
+            displayValue = String(format: "%.1f", skorMinimum)
         }
 
+        var temp = [String: String]()
+        for komponen in sortedKomponen {
+            temp[komponen.id.uuidString] = komponen.nilaiAktual == nil ? displayValue : "-"
+        }
+        skorMinimumDiperlukan = temp
+        summaryText = "Untuk mencapai grade \(selectedGrade), kamu butuh nilai rata-rata \(displayValue) pada komponen sisa."
+    }
+
+    private func resetCalculations() {
+        summaryText = "Silakan pilih target grade untuk memulai kalkulasi."
+        resetSkorMinimumDisplay()
+    }
+
+    private func resetSkorMinimumDisplay() {
+        skorMinimumDiperlukan = Dictionary(uniqueKeysWithValues:
+            sortedKomponen.map { ($0.id.uuidString, "-") }
+        )
+    }
 }
 
-// MARK: - View untuk Konten Pop-up Info
 private struct InfoPopupView: View {
     @Environment(\.dismiss) var dismiss
 
@@ -187,7 +178,7 @@ private struct InfoPopupView: View {
                     }
                     .padding(.vertical, 8)
                 }
-                
+
                 Section(header: Text("Keterangan Skor")) {
                     Label("Menunjukkan skor rata-rata yang Anda butuhkan.", systemImage: "numbers")
                     Label("Selamat! Target nilai sudah tercapai.", systemImage: "checkmark.circle.fill")

@@ -45,7 +45,7 @@ struct LoadingScreen: View {
                         Spacer()
                         
                         VStack {
-                            Image("gator")
+                            Image("Gator")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 200, height: 120)

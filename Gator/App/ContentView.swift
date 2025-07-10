@@ -21,5 +21,6 @@ struct ContentView: View {
                 }
             }
         }
+        .tint(Color("GreenGator")) 
     }
 }

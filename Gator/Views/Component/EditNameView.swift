@@ -5,22 +5,25 @@ struct EditNameView: View {
     @State private var inputName: String = ""
 
     var body: some View {
-        Form {
-            Section(header: Text("Ubah Nama")) {
-                TextField("Nama Baru", text: $inputName)
-            }
-
-            Section {
-                Button("Simpan") {
-                    let trimmed = inputName.trimmingCharacters(in: .whitespaces)
-                    if !trimmed.isEmpty {
-                        userName = trimmed
-                    }
+        VStack {
+            Form {
+                Section(header: Text("Ubah Nama")) {
+                    TextField("Nama Baru", text: $inputName)
                 }
-                .disabled(inputName.trimmingCharacters(in: .whitespaces).isEmpty)
+
+                Section {
+                    Button("Simpan") {
+                        let trimmed = inputName.trimmingCharacters(in: .whitespaces)
+                        if !trimmed.isEmpty {
+                            userName = trimmed
+                        }
+                    }
+                    .disabled(inputName.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
             }
         }
         .navigationTitle("Edit Nama")
+        .tint(Color("GreenGator")) 
         .onAppear {
             inputName = userName
         }

@@ -37,7 +37,7 @@ struct CourseDetailPopupView: View {
 
                 Divider()
 
-                // ✅ Konten scrollable
+
                 ScrollView {
                     VStack(spacing: 0) {
                         HStack {

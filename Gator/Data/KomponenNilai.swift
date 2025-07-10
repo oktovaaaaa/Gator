@@ -10,16 +10,19 @@ import SwiftData
 
 @Model
 final class KomponenNilai {
+    @Attribute(.unique) var id: UUID = UUID() 
+
     var nama: String
     var bobot: Double
     var nilaiAktual: Double?
-    
     var mataKuliah: MataKuliah?
-    
-    // PERBARUI INIT DI SINI
-    init(nama: String, bobot: Double, mataKuliah: MataKuliah) {
+
+    // ✅ Init lengkap
+    init(nama: String, bobot: Double, nilaiAktual: Double? = nil, mataKuliah: MataKuliah) {
+        self.id = UUID()
         self.nama = nama
         self.bobot = bobot
+        self.nilaiAktual = nilaiAktual
         self.mataKuliah = mataKuliah
     }
-}   
+}
