@@ -37,9 +37,7 @@ struct HomeView: View {
                         HeaderView()
                         WelcomeCardView(nama: userName)
                         
-                        // --- BAGIAN YANG DIPERBARUI ---
                         VStack(spacing: 0) {
-                            // Baris Program Studi
                             HStack(spacing: 16) {
                                 Image(systemName: "building.columns.fill")
                                     .font(.headline)
@@ -50,7 +48,6 @@ struct HomeView: View {
                                     .foregroundColor(.gray)
                                 Spacer()
                                 
-                                // Menu hanya membungkus bagian kanan
                                 Menu {
                                     ForEach(allJurusans) { jurusan in
                                         Button(jurusan.nama) {
@@ -71,13 +68,16 @@ struct HomeView: View {
 
                             Divider().padding(.leading, 40)
 
-                            // Baris Semester
                             HStack(spacing: 16) {
-                                Image(systemName: "graduationcap.fill").font(.headline).foregroundColor(.gray)
-                                Text("SEMESTER").font(.caption).fontWeight(.semibold).foregroundColor(.gray)
+                                Image(systemName: "graduationcap.fill")
+                                    .font(.headline)
+                                    .foregroundColor(.gray)
+                                Text("SEMESTER")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.gray)
                                 Spacer()
                                 
-                                // Menu hanya membungkus bagian kanan
                                 Menu {
                                     if let selectedMajor = selectedMajor {
                                         ForEach(selectedMajor.semesters.sorted(by: { $0.nomor < $1.nomor })) { semester in
@@ -102,8 +102,6 @@ struct HomeView: View {
                         }
                         .background(Color("WhiteDark"))
                         .cornerRadius(12)
-                        // --- AKHIR BAGIAN YANG DIPERBARUI ---
-                        
                         
                         if !coursesToDisplay.isEmpty {
                             LazyVGrid(columns: gridLayout, spacing: 16) {
@@ -141,7 +139,8 @@ struct HomeView: View {
         }
         .animation(.easeInOut, value: courseForPopup)
         .onChange(of: selectedMajorName) {
-            selectedSemesterNumber = selectedMajor?.semesters.first?.nomor
+
+            selectedSemesterNumber = selectedMajor?.semesters.sorted(by: { $0.nomor < $1.nomor }).first?.nomor
         }
     }
     
@@ -150,13 +149,9 @@ struct HomeView: View {
         if selectedMajorName == nil, let firstMajor = allJurusans.first {
             selectedMajorName = firstMajor.nama
         }
-        if selectedSemesterNumber == nil, let firstSemester = selectedMajor?.semesters.first {
+        if selectedSemesterNumber == nil,
+           let firstSemester = selectedMajor?.semesters.sorted(by: { $0.nomor < $1.nomor }).first {
             selectedSemesterNumber = firstSemester.nomor
         }
     }
 }
-
-
-// Catatan: `struct SelectionRowView` sudah tidak diperlukan lagi dan bisa dihapus dari file ini
-// karena logikanya sudah kita pindahkan langsung ke dalam body `HomeView`.
-// Semua komponen view lainnya (HeaderView, WelcomeCardView, dll.) tetap sama.

@@ -6,7 +6,7 @@ struct KalkulatorNilaiView: View {
     @Bindable var mataKuliah: MataKuliah
 
     @State private var selectedGrade: String = "Pilih Grade"
-    @State private var skorMinimumDiperlukan: [String: String] = [:]
+    @State private var skorMinimumDiperlukan: [PersistentIdentifier: String] = [:]
     @State private var summaryText: String = "Silakan pilih target grade untuk memulai kalkulasi."
     @State private var isInfoSheetPresented = false
 
@@ -35,12 +35,12 @@ struct KalkulatorNilaiView: View {
                 }
                 .padding(.bottom, 10)
 
-                ForEach(sortedKomponen) { komponen in
+                ForEach(sortedKomponen, id: \.nama) { komponen in
                     KalkulatorInputRow(
                         namaKomponen: komponen.nama,
                         persentase: komponen.bobot,
                         nilaiAktual: bindingFor(komponen),
-                        skorMinimumTampil: skorMinimumDiperlukan[komponen.id.uuidString] ?? "-"
+                        skorMinimumTampil: skorMinimumDiperlukan[mataKuliah.persistentModelID] ?? "-"
                     )
                     Divider()
                 }
@@ -144,11 +144,7 @@ struct KalkulatorNilaiView: View {
             displayValue = String(format: "%.1f", skorMinimum)
         }
 
-        var temp = [String: String]()
-        for komponen in sortedKomponen {
-            temp[komponen.id.uuidString] = komponen.nilaiAktual == nil ? displayValue : "-"
-        }
-        skorMinimumDiperlukan = temp
+        skorMinimumDiperlukan = [mataKuliah.persistentModelID: displayValue]
         summaryText = "Untuk mencapai grade \(selectedGrade), kamu butuh nilai rata-rata \(displayValue) pada komponen sisa."
     }
 
@@ -158,9 +154,7 @@ struct KalkulatorNilaiView: View {
     }
 
     private func resetSkorMinimumDisplay() {
-        skorMinimumDiperlukan = Dictionary(uniqueKeysWithValues:
-            sortedKomponen.map { ($0.id.uuidString, "-") }
-        )
+        skorMinimumDiperlukan = [mataKuliah.persistentModelID: "-"]
     }
 }
 

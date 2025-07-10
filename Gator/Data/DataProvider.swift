@@ -15,7 +15,7 @@ enum DataProvider {
         let descriptor = FetchDescriptor<Jurusan>()
         guard (try? context.fetch(descriptor))?.isEmpty == true else { return }
         
-        // Panggil data dari setiap file dan simpan ke database
+
         context.insert(D3TI_Data.create())
         context.insert(D3TK_Data.create())
         context.insert(D4TRPL_Data.create())

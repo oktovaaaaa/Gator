@@ -10,14 +10,15 @@ import SwiftData
 
 @Model
 final class MataKuliah {
+
+
     var nama: String
     var sks: Int
     @Relationship(deleteRule: .cascade, inverse: \KomponenNilai.mataKuliah)
     var komponen: [KomponenNilai] = []
-    
+
     var semester: Semester?
-    
-    // PERBARUI INIT DI SINI
+
     init(nama: String, sks: Int, semester: Semester, komponen: [KomponenNilai] = []) {
         self.nama = nama
         self.sks = sks
