@@ -2,12 +2,13 @@ import SwiftUI
 
 struct ContentView: View {
     @AppStorage("userName") private var userName: String = ""
-    @State private var showLoading = true
-    
+    @State private var showLoading = true 
+
     var body: some View {
-        Group {
+        NavigationStack {
             if showLoading {
                 LoadingScreen {
+                  
                     withAnimation {
                         showLoading = false
                     }

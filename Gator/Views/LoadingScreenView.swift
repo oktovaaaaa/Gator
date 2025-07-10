@@ -2,29 +2,49 @@ import SwiftUI
 
 struct LoadingScreen: View {
     @AppStorage("userName") private var userName: String = ""
-    @State private var isActive = false
     @State private var showSplash = true
     @State private var size: CGFloat = 0.8
     @State private var opacity: Double = 0.5
-
-    // Tambahkan closure ini!
+    
+    @State private var showReveal = false
+    @State private var circleScale: CGFloat = 0.01
+    
     var onFinish: () -> Void
-
+    
     var body: some View {
         ZStack {
-            if isActive {
-                Color.clear // placeholder aja, nanti langsung trigger onFinish
-                    .onAppear {
+            if showReveal {
+                ZStack {
+                    if userName.isEmpty {
+                        OnboardingView()
+                    } else {
+                        HomeView(userName: userName)
+                    }
+                }
+                .mask(
+                    Circle()
+                        .frame(width: 100, height: 100)
+                        .scaleEffect(circleScale)
+                        .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+                )
+                .onAppear {
+                    withAnimation(.easeInOut(duration: 1.0)) {
+                        circleScale = 12.0
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         onFinish()
                     }
-            } else {
-                ZStack {
+                }
+            }
+
+            if showSplash {
+                ZStack(alignment: .bottom) {
                     Color.green.ignoresSafeArea()
                     
-                    if showSplash {
+                    VStack {
+                        Spacer()
+                        
                         VStack {
-                            Spacer()
-                            
                             Image("gator")
                                 .resizable()
                                 .scaledToFit()
@@ -33,33 +53,33 @@ struct LoadingScreen: View {
                             Text("Welcome to Gator")
                                 .font(.title)
                                 .foregroundColor(.white)
-                            
-                            Spacer()
-                            
-                            Text("Made by Kelompok Gator")
-                                .font(.footnote)
-                                .foregroundColor(.white.opacity(0.8))
-                                .padding(.bottom, 16)
                         }
                         .scaleEffect(size)
                         .opacity(opacity)
-                        .onAppear {
-                            withAnimation(.easeIn(duration: 1.2)) {
-                                size = 0.9
-                                opacity = 1.0
-                            }
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
-                                withAnimation(.easeOut(duration: 0.5)) {
-                                    showSplash = false
-                                }
-                            }
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-                                withAnimation(.easeInOut(duration: 0.5)) {
-                                    isActive = true
-                                }
-                            }
+                        
+                        Spacer()
+                        
+                        Rectangle()
+                            .fill(Color.clear)
+                            .frame(height: 60)
+                    }
+                    
+                    Text("Made by Kelompok MIC")
+                        .font(.footnote)
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.bottom, 16)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                .onAppear {
+                    withAnimation(.easeIn(duration: 1.2)) {
+                        size = 0.9
+                        opacity = 1.0
+                    }
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            showSplash = false
+                            showReveal = true
                         }
                     }
                 }
