@@ -11,7 +11,6 @@ import SwiftData
 
 enum DataProvider {
     static func generate(context: ModelContext) {
-        // Cek agar data tidak dibuat berulang kali
         let descriptor = FetchDescriptor<Jurusan>()
         guard (try? context.fetch(descriptor))?.isEmpty == true else { return }
         

@@ -2,13 +2,12 @@ import SwiftUI
 
 struct ContentView: View {
     @AppStorage("userName") private var userName: String = ""
-    @State private var showLoading = true 
+    @State private var showLoading = true
 
     var body: some View {
         NavigationStack {
             if showLoading {
                 LoadingScreen {
-                  
                     withAnimation {
                         showLoading = false
                     }
@@ -21,6 +20,6 @@ struct ContentView: View {
                 }
             }
         }
-        .tint(Color("GreenGator")) 
+        .tint(Color("GreenGator"))
     }
 }

@@ -10,12 +10,18 @@ import SwiftData
 
 @main
 struct Gator_Final_BangetApp: App {
-    // >>> BARIS YANG MENYEBABKAN ERROR DIHAPUS <<<
-    // @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
     let container: ModelContainer
-    
+
     init() {
+       
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backButtonAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: -1000, vertical: 0)
+
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
+
         do {
             let schema = Schema([Jurusan.self, Semester.self, MataKuliah.self, KomponenNilai.self])
             let config = ModelConfiguration("GatorDB", schema: schema)
@@ -24,7 +30,7 @@ struct Gator_Final_BangetApp: App {
             fatalError("Gagal membuat ModelContainer: \(error.localizedDescription)")
         }
     }
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()

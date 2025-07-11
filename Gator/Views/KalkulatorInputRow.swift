@@ -57,7 +57,7 @@ struct KalkulatorInputRow: View {
         .padding(.vertical, 10)
     }
 
-    // ✅ Binding: truncate ke 2 digit desimal TANPA pembulatan
+
     private var limitedBinding: Binding<String> {
         Binding<String>(
             get: {
@@ -68,7 +68,7 @@ struct KalkulatorInputRow: View {
                 if sanitized.isEmpty {
                     nilaiAktual = ""
                 } else if let value = Double(sanitized), value <= 100 {
-                    // Truncate tanpa pembulatan
+
                     let truncated = floor(value * 100) / 100
                     let formatted = String(format: "%.2f", truncated)
                     nilaiAktual = formatted

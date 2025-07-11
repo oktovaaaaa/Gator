@@ -16,7 +16,6 @@ final class Semester {
     
     var jurusan: Jurusan?
     
-    // PERBARUI INIT DI SINI
     init(nomor: Int, jurusan: Jurusan) {
         self.nomor = nomor
         self.jurusan = jurusan

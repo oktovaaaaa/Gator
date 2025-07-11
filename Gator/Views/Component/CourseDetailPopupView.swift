@@ -9,7 +9,6 @@ struct CourseDetailPopupView: View {
     var body: some View {
         if let mataKuliah = courseForPopup {
             VStack(spacing: 0) {
-                // Header
                 HStack {
                     Button("Edit") {
                         isEditing.toggle()
@@ -43,7 +42,7 @@ struct CourseDetailPopupView: View {
                         HStack {
                             Text("Komponen")
                             Spacer()
-                            Text("Weight")
+                            Text("Bobot")
                         }
                         .font(.caption)
                         .fontWeight(.bold)
@@ -74,7 +73,7 @@ struct CourseDetailPopupView: View {
                 Button {
                     onContinue(mataKuliah)
                 } label: {
-                    Text("Calculate Grade")
+                    Text("Kalkulasi Grade")
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)

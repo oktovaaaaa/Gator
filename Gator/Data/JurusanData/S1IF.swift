@@ -11,7 +11,6 @@ import SwiftData
 // S1 - Informatika
 enum S1IF_Data {
     static func create() -> Jurusan {
-        // Buat objek Jurusan
         let jurusan = Jurusan(nama: "S1 - Informatika")
        
         // Semester 1
